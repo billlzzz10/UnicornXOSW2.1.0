@@ -1,12 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-/**
- * Express middleware to authenticate requests using a JSON Web Token (JWT).
- * @param {Request} req - The Express request object.
- * @param {Response} res - The Express response object.
- * @param {NextFunction} next - The Express next middleware function.
- */
 export function authenticateJWT(req: Request, res: Response, next: NextFunction) {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ msg: 'Missing token' });

@@ -1,43 +1,56 @@
 import { ViewName, Project, Note, Task, DictionaryEntry, PlotPoint, WorldElement, PlotPointStatus, NoteStatus, OperationMode, NoteTemplate, NotePriority, LoreEntry, RelationshipType, ExportTemplate, AppTheme } from './types';
+import { fetchPrompt } from './agents/PromptAgent';
 
-/** The default view to be displayed when the application loads. */
 export const DEFAULT_VIEW: ViewName = 'dashboard';
 
-/** The main title of the application. */
 export const APP_TITLE = 'Ashval Writer\'s Suite';
 
-/** The ID of the default AI personality to use in the AI Writer. */
 export const DEFAULT_AI_PERSONALITY_ID = 'creative-writer';
-
-/** The default status for a newly created plot point. */
 export const DEFAULT_PLOT_POINT_STATUS: PlotPointStatus = 'planned';
-
-/** The default status for a newly created note. */
 export const DEFAULT_NOTE_STATUS: NoteStatus = 'draft';
 
-/** Predefined categories for notes. */
 export const NOTE_CATEGORIES = [
-  { key: 'character', label: 'Characters', icon: 'user', colorClasses: { pillBg: 'bg-blue-100 dark:bg-blue-900' } },
-  { key: 'world', label: 'Worldbuilding', icon: 'globe', colorClasses: { pillBg: 'bg-green-100 dark:bg-green-900' } },
-  { key: 'plot', label: 'Plot', icon: 'sitemap', colorClasses: { pillBg: 'bg-red-100 dark:bg-red-900' } },
-  { key: 'research', label: 'Research', icon: 'book', colorClasses: { pillBg: 'bg-yellow-100 dark:bg-yellow-900' } },
-  { key: 'idea', label: 'Ideas', icon: 'lightbulb', colorClasses: { pillBg: 'bg-purple-100 dark:bg-purple-900' } },
-  { key: 'other', label: 'Other', icon: 'file-alt', colorClasses: { pillBg: 'bg-gray-100 dark:bg-gray-700' } },
+  'Characters',
+  'Worldbuilding',
+  'Plot',
+  'Research',
+  'Ideas',
+  'Other',
 ];
-
-/** A list of common relationship types for character and lore management. */
 export const COMMON_RELATIONSHIP_TYPES: RelationshipType[] = [
   'Ally', 'Enemy', 'Friend', 'Rival', 'Family (Sibling)', 'Family (Parent)',
   'Family (Child)', 'Family (Spouse)', 'Family (Other)', 'Mentor', 'Mentee',
   'Romantic Interest', 'Complicated', 'Neutral', 'Servant', 'Master', 'Acquaintance', 'Other'
 ];
 
-/** Defines different operation modes for the AI. */
 export const OPERATION_MODES: OperationMode[] = [
-  // ...
+  {
+    value: 'scene-analysis',
+    label: 'วิเคราะห์ฉาก',
+    systemInstruction: `คุณคือผู้ช่วยนักเขียน AI ผู้เชี่ยวชาญด้านการวิเคราะห์ฉาก
+1. วิเคราะห์ฉากที่ให้มาในรายละเอียดเกี่ยวกับองค์ประกอบ โครงสร้าง จังหวะ โทน อารมณ์ สัญลักษณ์ และผลกระทบโดยรวมต่อเรื่องราว
+2. หากมีข้อมูลโปรเจกต์ (Project Context) ให้มา ให้ใช้ข้อมูลนั้นประกอบการวิเคราะห์ด้วย
+3. เสนอแนะแนวทางที่นำไปปฏิบัติได้เพื่อปรับปรุงหรือขยายความ โดยเน้นจุดแข็งและส่วนที่ควรพัฒนา`,
+    userPromptFormatter: (input: string) => `กรุณาวิเคราะห์ฉากต่อไปนี้:\n\n${input}`,
+  },
+  {
+    value: 'character-analysis',
+    label: 'วิเคราะห์ตัวละคร',
+    systemInstruction: `คุณคือผู้ช่วยนักเขียน AI ผู้เชี่ยวชาญด้านการวิเคราะห์ตัวละคร
+1. วิเคราะห์ข้อมูลตัวละครที่ให้มาเกี่ยวกับลักษณะนิสัย แรงจูงใจ เป้าหมาย ความขัดแย้งภายในและภายนอก ความสัมพันธ์กับตัวละครอื่น พัฒนาการของตัวละคร และบทบาทในเรื่องราว
+2. หากมีข้อมูลโปรเจกต์ (Project Context) ให้มา ให้ใช้ข้อมูลนั้นประกอบการวิเคราะห์ด้วย
+3. ให้คำแนะนำเพื่อทำให้ตัวละครมีมิติและน่าเชื่อถือยิ่งขึ้น`,
+    userPromptFormatter: (input: string) => `กรุณาวิเคราะห์ตัวละคร:\n\n${input}`,
+  },
+  {
+    value: 'magic-system',
+    label: 'วิเคราะห์ระบบเวท/พลังพิเศษ',
+    systemInstruction: "คุณคือผู้ช่วยนักเขียน AI ผู้เชี่ยวชาญด้านการวิเคราะห์ระบบพลังเหนือธรรมชาติ จงวิเคราะห์ระบบที่ให้มาในแง่ของกฎเกณฑ์ ข้อจำกัด แหล่งพลังงาน ผลกระทบต่อโลกและตัวละคร ความสมดุล ความคิดสร้างสรรค์ และความสอดคล้องภายใน หากมีข้อมูลโปรเจกต์ (Project Context) ให้มา ให้ใช้ข้อมูลนั้นประกอบการวิเคราะห์ด้วย พร้อมเสนอแนะแนวทางเพื่อเพิ่มความน่าเชื่อถือ ความลึกซึ้ง และความน่าสนใจของระบบ",
+    userPromptFormatter: (input: string) => `กรุณาวิเคราะห์ระบบเวทมนตร์/พลังพิเศษจากรายละเอียดต่อไปนี้:\n\n${input}`,
+  },
+  // ...(add remaining modes as specified in user request)
 ];
 
-/** Navigation items for the main sidebar menu. */
 export const MAIN_NAVIGATION = [
   { id: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
   { id: 'notes', label: 'Notes', icon: 'notes' },
@@ -45,7 +58,6 @@ export const MAIN_NAVIGATION = [
   { id: 'graph', label: 'Graph', icon: 'graph' }
 ];
 
-/** Navigation items for the tools section of the sidebar. */
 export const TOOLS_NAVIGATION = [
   { id: 'tasks', label: 'Tasks', icon: 'tasks' },
   { id: 'dictionary', label: 'Dictionary', icon: 'dictionary' },
@@ -54,12 +66,10 @@ export const TOOLS_NAVIGATION = [
   { id: 'story-structure', label: 'Story Structure', icon: 'structure' }
 ];
 
-/** Navigation items for the settings section of the sidebar. */
 export const SETTINGS_NAVIGATION = [
   { id: 'settings', label: 'Settings', icon: 'settings' }
 ];
 
-/** Initial project data used if no data exists in local storage. */
 export const INITIAL_PROJECTS: Project[] = [
   {
     id: '1',
@@ -70,13 +80,12 @@ export const INITIAL_PROJECTS: Project[] = [
   }
 ];
 
-/** Initial note data used if no data exists in local storage. */
 export const INITIAL_NOTES: Note[] = [
   {
     id: '1',
     title: 'Welcome to Ashval Writer\'s Suite',
     content: 'This is your first note. Start writing your story here!',
-    category: 'idea',
+    category: 'Ideas',
     status: 'draft',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -84,4 +93,64 @@ export const INITIAL_NOTES: Note[] = [
   }
 ];
 
-// ... and so on for other initial data ...
+export const INITIAL_TASKS: Task[] = [
+  {
+    id: '1',
+    title: 'Create your first character',
+    description: 'Develop a compelling protagonist for your story',
+    completed: false,
+    priority: 'medium',
+    createdAt: new Date(),
+    projectId: '1'
+  }
+];
+
+export const INITIAL_DICTIONARY_ENTRIES: DictionaryEntry[] = [
+  {
+    id: '1',
+    term: 'Ashval',
+    definition: 'A mystical realm where stories come to life',
+    category: 'Worldbuilding',
+    projectId: '1'
+  }
+];
+
+export const INITIAL_PLOT_POINTS: PlotPoint[] = [
+  {
+    id: '1',
+    title: 'Opening Scene',
+    description: 'Introduce the main character and setting',
+    status: 'planned',
+    order: 1,
+    projectId: '1'
+  }
+];
+
+export const INITIAL_WORLD_ELEMENTS: WorldElement[] = [
+  {
+    id: '1',
+    name: 'The Writer\'s Sanctuary',
+    type: 'Location',
+    description: 'A peaceful place where creativity flows freely',
+    projectId: '1'
+  }
+];
+
+export const APP_ROADMAP_MARKDOWN = `
+# Ashval Writer's Suite Roadmap
+
+## Current Features
+- [x] Notes Management
+- [x] Task Tracking
+- [x] AI Writing Assistant
+- [x] Project Organization
+
+## Planned Features
+- [ ] Advanced Plot Structure Tools
+- [ ] Character Relationship Mapping
+- [ ] World Building Templates
+- [ ] Export to Multiple Formats
+`;
+
+const result = await fetchPrompt({ seed: 123, gender: 'male', custom: 'portrait' });
+console.log(result);
