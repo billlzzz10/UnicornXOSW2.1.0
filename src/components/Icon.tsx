@@ -22,7 +22,7 @@ const Icon: React.FC<IconProps> = ({ name, size = 20, className = '' }) => {
   };
 
   return (
-    <span 
+    <span
       className={`inline-block text-${size === 20 ? 'base' : size === 16 ? 'sm' : 'lg'} ${className}`}
       aria-label={`${name} icon`}
     >

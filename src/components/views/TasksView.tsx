@@ -28,7 +28,7 @@ const TasksView: React.FC<TasksViewProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const filteredTasks = tasks.filter(task => task.projectId === currentProjectId);
-  
+
   const sortedTasks = [...filteredTasks].sort((a, b) => {
     if (sortOrder === 'newest') {
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -89,7 +89,7 @@ const TasksView: React.FC<TasksViewProps> = ({
   useEffect(() => {
     cancelEditing();
   }, [currentProjectId]);
-  
+
   const btnPrimary = "px-4 py-2 bg-primary text-white rounded-md font-semibold hover:bg-primary-hover active:scale-95 transition-all duration-200 flex items-center";
 
   return (
@@ -101,7 +101,7 @@ const TasksView: React.FC<TasksViewProps> = ({
         </h2>
         <div className="flex items-center">
           <span className="mr-2 text-sm text-text-secondary">เรียงลำดับ:</span>
-          <select 
+          <select
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value as 'newest' | 'oldest' | 'completed')}
             className="bg-surface text-text-primary rounded px-2 py-1 text-sm border border-border focus:ring-2 focus:ring-primary"
@@ -152,11 +152,11 @@ const TasksView: React.FC<TasksViewProps> = ({
         ) : (
           <ul className="space-y-3">
             {sortedTasks.map(task => (
-              <li 
+              <li
                 key={task.id}
                 className={`flex items-center justify-between p-3.5 rounded-lg transition-all duration-200 ${
-                  task.completed 
-                    ? 'bg-success-bg dark:bg-success-dark-bg opacity-70' 
+                  task.completed
+                    ? 'bg-success-bg dark:bg-success-dark-bg opacity-70'
                     : 'bg-surface hover:bg-border'
                 }`}
               >
@@ -167,7 +167,7 @@ const TasksView: React.FC<TasksViewProps> = ({
                     onChange={() => toggleTaskCompletion(task.id)}
                     className="task-checkbox h-5 w-5 text-primary rounded focus:ring-primary mr-3 flex-shrink-0"
                   />
-                  
+
                   {editingTaskId === task.id ? (
                     <div className="flex flex-grow items-center gap-2">
                       <input
@@ -204,7 +204,7 @@ const TasksView: React.FC<TasksViewProps> = ({
                     </div>
                   )}
                 </div>
-                
+
                 {editingTaskId !== task.id && (
                   <div className="flex space-x-2 flex-shrink-0 ml-2">
                     <button

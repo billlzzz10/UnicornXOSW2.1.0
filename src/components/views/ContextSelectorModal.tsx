@@ -83,7 +83,7 @@ const ContextSelectorModal: React.FC<ContextSelectorModalProps> = ({
             </div>
           </div>
         </div>
-        
+
         <div className="overflow-y-auto flex-grow p-4 border-t border-b border-border">
           {filteredNotes.length > 0 ? (
             <ul className="space-y-2">
