@@ -1,35 +1,84 @@
 import React from 'react';
+import { ViewName } from '../../types';
+import Icon from './Icon';
+import { APP_TITLE } from '../../constants';
 
-interface SidebarProps {
-  isOpen: boolean;
-  onClose: () => void;
+interface NavItem {
+  id: ViewName;
+  label: string;
+  icon: string;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
-  return (
-    <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-lg transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-200 ease-in-out`}>
-      <div className="p-4">
-        <button
-          onClick={onClose}
-          className="mb-4 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-        >
-          ✕
-        </button>
-        <nav>
-          <div className="space-y-2">
-            <a href="#" className="block px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-              Dashboard
-            </a>
-            <a href="#" className="block px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-              Notes
-            </a>
-            <a href="#" className="block px-3 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-              AI Writer
-            </a>
-          </div>
-        </nav>
+interface NavConfig {
+  main: NavItem[];
+  tools: NavItem[];
+  settings: NavItem[];
+}
+
+/**
+ * @interface SidebarProps
+ * @description Props for the Sidebar component.
+ */
+interface SidebarProps {
+  isOpen: boolean;
+  currentView: ViewName;
+  onNavigate: (view: ViewName) => void;
+  navConfig: NavConfig;
+}
+
+/**
+ * The application's main sidebar for navigation.
+ * @param {SidebarProps} props - The props for the component.
+ */
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, currentView, onNavigate, navConfig }) => {
+  const renderNavItem = (item: NavItem) => (
+    <button
+      key={item.id}
+      onClick={() => onNavigate(item.id)}
+      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium ${
+        currentView === item.id
+          ? 'bg-primary text-white'
+          : 'text-text-secondary hover:bg-surface'
+      }`}
+    >
+      <Icon name={item.icon} />
+      <span>{item.label}</span>
+    </button>
+  );
+
+  const sidebarContent = (
+    <div className="flex flex-col h-full">
+      <div className="p-4 border-b border-border h-16 flex items-center">
+        <h2 className="text-lg font-semibold">{APP_TITLE}</h2>
       </div>
-    </aside>
+      <nav className="flex-grow p-4 space-y-6">
+        <div>
+          <h3 className="px-3 mb-2 text-xs font-semibold uppercase">Main</h3>
+          <div className="space-y-1">{navConfig.main.map(renderNavItem)}</div>
+        </div>
+        <div>
+          <h3 className="px-3 mb-2 text-xs font-semibold uppercase">Tools</h3>
+          <div className="space-y-1">{navConfig.tools.map(renderNavItem)}</div>
+        </div>
+      </nav>
+      <div className="p-4 border-t border-border">
+        <div className="space-y-1">{navConfig.settings.map(renderNavItem)}</div>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      <aside className="hidden md:block fixed inset-y-0 left-0 z-30 w-64 bg-paper-bg border-r border-border">
+        {sidebarContent}
+      </aside>
+
+      <div className={`md:hidden fixed inset-y-0 left-0 z-50 w-64 bg-paper-bg border-r border-border transform transition-transform ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        {sidebarContent}
+      </div>
+
+      {isOpen && <div onClick={() => onNavigate(currentView)} className="fixed inset-0 bg-black/50 z-40 md:hidden" />}
+    </>
   );
 };
 

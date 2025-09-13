@@ -1,38 +1,89 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
+import { Project } from '../../types';
+import Icon from './Icon';
 
-interface Project {
-  id: string;
-  name: string;
-}
-
+/**
+ * @interface ProjectSelectorDropdownProps
+ * @description Props for the ProjectSelectorDropdown component.
+ */
 interface ProjectSelectorDropdownProps {
+  isOpen: boolean;
   projects: Project[];
-  selectedProject?: Project;
-  onSelectProject: (project: Project) => void;
+  currentProjectId: string;
+  onSelectProject: (projectId: string) => void;
+  onClose: () => void;
+  onCreateNewProject: () => void;
+  triggerRef: React.RefObject<HTMLButtonElement>;
 }
 
-const ProjectSelectorDropdown: React.FC<ProjectSelectorDropdownProps> = ({ 
-  projects, 
-  selectedProject, 
-  onSelectProject 
+/**
+ * A dropdown menu for selecting and creating projects.
+ * @param {ProjectSelectorDropdownProps} props - The props for the component.
+ */
+const ProjectSelectorDropdown: React.FC<ProjectSelectorDropdownProps> = ({
+  isOpen,
+  projects,
+  currentProjectId,
+  onSelectProject,
+  onClose,
+  onCreateNewProject,
+  triggerRef,
 }) => {
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(event.target as Node)
+      ) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, onClose, triggerRef]);
+
+  if (!isOpen) return null;
+
   return (
-    <div className="relative">
-      <select 
-        title="Select Project"
-        className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-        value={selectedProject?.id || ''}
-        onChange={(e) => {
-          const project = projects.find(p => p.id === e.target.value);
-          if (project) onSelectProject(project);
-        }}
-      >
+    <div
+      ref={dropdownRef}
+      className="absolute top-16 left-4 w-72 bg-paper-bg rounded-lg shadow-lg border border-border z-50"
+    >
+      <div className="p-2">
         {projects.map(project => (
-          <option key={project.id} value={project.id}>
-            {project.name}
-          </option>
+          <button
+            key={project.id}
+            onClick={() => onSelectProject(project.id)}
+            className={`w-full text-left flex items-center gap-3 px-2 py-1.5 rounded-md text-sm ${
+              project.id === currentProjectId
+                ? 'bg-primary text-white'
+                : 'text-text-primary hover:bg-surface'
+            }`}
+          >
+            <Icon name="book" />
+            <span>{project.name}</span>
+            {project.id === currentProjectId && <Icon name="check" />}
+          </button>
         ))}
-      </select>
+        <div className="border-t border-border mt-2 pt-2">
+          <button
+            onClick={onCreateNewProject}
+            className="w-full text-left flex items-center gap-3 px-2 py-1.5 rounded-md text-sm"
+          >
+            <Icon name="plus" />
+            <span>Create New Project</span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

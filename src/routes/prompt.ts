@@ -1,10 +1,16 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { fetchPrompt, PromptParams } from '../agents/PromptAgent';
 
 const router = express.Router();
 
-// POST /api/prompt
-router.post('/', async (req, res) => {
+/**
+ * @route POST /api/prompt
+ * @description Receives parameters and uses them to generate a text prompt via the PromptAgent.
+ * @access Private (requires JWT authentication)
+ * @param {Request} req - The Express request object. Expects a body matching the `PromptParams` interface.
+ * @param {Response} res - The Express response object.
+ */
+router.post('/', async (req: Request, res: Response) => {
   try {
     const params = req.body as PromptParams;
     const text = await fetchPrompt(params);

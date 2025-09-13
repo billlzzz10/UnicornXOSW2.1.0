@@ -1,27 +1,35 @@
-export const CORE_WRITING_PERSONALITIES = {
+import { AiPersonality } from './types';
+
+/**
+ * A collection of core AI personalities for creative writing tasks.
+ */
+export const CORE_WRITING_PERSONALITIES: Record<string, AiPersonality> = {
   'creative-writer': {
     id: 'creative-writer',
     name: 'Creative Writer',
-    description: 'A creative assistant for storytelling and writing',
-    systemPrompt: 'You are a creative writing assistant. Help with story development, character creation, and creative writing tasks.'
+    description: 'A creative assistant for storytelling and writing.',
+    systemPrompt: 'You are a creative writing assistant.'
   },
   'editor': {
     id: 'editor',
     name: 'Editor',
-    description: 'A professional editor for refining and improving text',
-    systemPrompt: 'You are a professional editor. Help improve writing style, grammar, and clarity.'
+    description: 'A professional editor for refining and improving text.',
+    systemPrompt: 'You are a professional editor.'
   }
 };
 
-export const AI_FUNCTIONAL_TOOLS = {
+/**
+ * A collection of AI personalities that act as functional tools.
+ */
+export const AI_FUNCTIONAL_TOOLS: Record<string, Omit<AiPersonality, 'systemPrompt'>> = {
   'story-generator': {
     id: 'story-generator',
     name: 'Story Generator',
-    description: 'Generate story ideas and plots'
+    description: 'Generates story ideas and plots.'
   },
   'character-creator': {
     id: 'character-creator',
     name: 'Character Creator',
-    description: 'Create detailed character profiles'
+    description: 'Creates detailed character profiles.'
   }
 };

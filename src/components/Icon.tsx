@@ -1,33 +1,26 @@
 import React from 'react';
 
-interface IconProps {
+/**
+ * @interface IconProps
+ * @description Props for the Icon component.
+ */
+interface IconProps extends React.SVGAttributes<SVGElement> {
   name: string;
-  size?: number;
   className?: string;
 }
 
-const Icon: React.FC<IconProps> = ({ name, size = 20, className = '' }) => {
-  // Simple icon component - in a real app, you'd use a proper icon library
-  const icons: Record<string, string> = {
-    dashboard: '📊',
-    notes: '📝',
-    ai: '🤖',
-    graph: '🔗',
-    tasks: '✅',
-    dictionary: '📚',
-    lore: '🗂️',
-    timer: '⏱️',
-    structure: '🏗️',
-    settings: '⚙️'
-  };
-
+/**
+ * Renders an SVG icon from a sprite sheet.
+ * @param {IconProps} props - The props for the component.
+ */
+const Icon: React.FC<IconProps> = ({ name, className, ...props }) => {
   return (
-    <span 
-      className={`inline-block text-${size === 20 ? 'base' : size === 16 ? 'sm' : 'lg'} ${className}`}
-      aria-label={`${name} icon`}
+    <svg
+      className={`inline-block w-5 h-5 fill-current ${className}`}
+      {...props}
     >
-      {icons[name] || '❓'}
-    </span>
+      <use href={`/assets/icons.svg#${name}`} />
+    </svg>
   );
 };
 
