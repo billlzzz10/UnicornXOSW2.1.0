@@ -1,6 +1,6 @@
 {
-  "name": "ashval-writers-suite",
-  "version": "1.0.0",
+  "name": "UnicornX OS",
+  "version": "1.2.1",
   "description": "Ashval Writer's Suite: เครื่องมือ AI สำหรับนักเขียน วางแผนและสร้างสรรค์เนื้อหา บูรณาการ UnicornXOSW2.1.0",
   "type": "module",
   "main": "src/index.tsx",
@@ -18,7 +18,7 @@
     "typescript",
     "thai"
   ],
-  "author": "Ashval",
+  "author": "[https://github.com/billlzzz10/UnicornXOSW2.1.0]",
   "license": "MIT",
   "dependencies": {
     "@google/genai": "^1.8.0",
