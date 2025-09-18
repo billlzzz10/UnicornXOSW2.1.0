@@ -20,7 +20,7 @@ interface AllItems {
 interface VisNode {
   id: string; // Prefixed ID, e.g., "note-xyz", "plotpoint-abc"
   label: string;
-  group: string; 
+  group: string;
   title?: string; // Tooltip
   shape?: string;
   icon?: { face?: string; code?: string; size?: number; color?: string; };
@@ -55,7 +55,7 @@ const NodeDetailModal: React.FC<NodeDetailModalProps> = ({ isOpen, onClose, node
     const item = [...allItems.notes, ...allItems.plotPoints, ...allItems.worldElements].find(i => i.id === id);
     if (!item) return 'Unknown Item';
     // Type guard to safely access title or name
-    if ('title' in item) { 
+    if ('title' in item) {
       return item.title;
     }
     // item is WorldElement
@@ -82,7 +82,7 @@ const NodeDetailModal: React.FC<NodeDetailModalProps> = ({ isOpen, onClose, node
     if (nodeData.itemType === 'worldElement') return WORLD_ELEMENT_CATEGORIES.find(w => w.key === (nodeData as WorldElement).category)?.label || 'Other World Element';
     return 'Unknown Category';
   };
-  
+
   const getDescription = () => {
     if (nodeData.itemType === 'note') return (nodeData as Note).content;
     if (nodeData.itemType === 'plotPoint') return (nodeData as PlotPoint).description;
@@ -94,9 +94,9 @@ const NodeDetailModal: React.FC<NodeDetailModalProps> = ({ isOpen, onClose, node
     if (nodeData.itemType === 'note') {
       onEditNote(nodeData as Note);
     } else if (nodeData.itemType === 'plotPoint') {
-      onNavigate(ViewName.LoreManager); 
+      onNavigate(ViewName.LoreManager);
     } else if (nodeData.itemType === 'worldElement') {
-      onNavigate(ViewName.LoreManager); 
+      onNavigate(ViewName.LoreManager);
     }
     onClose();
   };
@@ -116,7 +116,7 @@ const NodeDetailModal: React.FC<NodeDetailModalProps> = ({ isOpen, onClose, node
         <div className="p-6 space-y-3 overflow-y-auto">
           <p className="text-sm text-text-secondary"><strong>ประเภท:</strong> {nodeData.itemType === 'note' ? 'Note' : nodeData.itemType === 'plotPoint' ? 'Plot Point' : 'World Element'}</p>
           <p className="text-sm text-text-secondary"><strong>หมวดหมู่/ชนิด:</strong> {getCategoryLabel()}</p>
-          
+
           <h4 className="font-medium mt-2">คำอธิบาย/เนื้อหา:</h4>
           <div className="text-sm markdown-content max-h-40 overflow-y-auto p-2 bg-bg-subtle rounded" dangerouslySetInnerHTML={getSafeHtml(getDescription().substring(0, 500) + (getDescription().length > 500 ? '...' : ''))}></div>
 
@@ -135,8 +135,8 @@ const NodeDetailModal: React.FC<NodeDetailModalProps> = ({ isOpen, onClose, node
         </div>
         <div className="p-4 border-t border-border flex justify-end space-x-2 bg-bg-subtle rounded-b-xl">
           <button onClick={onClose} className="px-4 py-2 bg-surface text-text-primary rounded-md hover:bg-border transition-colors">Close</button>
-          <button 
-            onClick={handleEdit} 
+          <button
+            onClick={handleEdit}
             className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-hover transition-colors"
             title={nodeData.itemType === 'note' ? "Edit Note" : "Navigate to item's view for editing"}
           >
@@ -162,7 +162,7 @@ const CreateLinkModal: React.FC<CreateLinkModalProps> = ({ isOpen, onClose, sour
   if (!isOpen || !sourceNode || !targetNode) return null;
 
   const allRelationshipTypes: (LinkRelationshipType | string)[] = [
-    'เกี่ยวข้องกับ', 'เป็นส่วนหนึ่งของ', 'สาเหตุของ', 'ผลลัพธ์ของ', 
+    'เกี่ยวข้องกับ', 'เป็นส่วนหนึ่งของ', 'สาเหตุของ', 'ผลลัพธ์ของ',
     'พันธมิตรกับ', 'ศัตรูกับ', 'อาศัยอยู่ที่', 'ครอบครอง', 'ถูกสร้างโดย', 'อื่นๆ'
   ];
 
@@ -229,7 +229,7 @@ type LayoutType = 'force' | 'hierarchical';
 
 const GraphView: React.FC<GraphViewProps> = ({ notes, plotPoints, worldElements, allItems, onOpenNoteEditor, onNavigate, onAddLink }) => {
   const graphContainerRef = useRef<HTMLDivElement>(null);
-  const networkInstanceRef = useRef<any>(null); 
+  const networkInstanceRef = useRef<any>(null);
   const isDarkMode = useMemo(() => document.documentElement.classList.contains('dark'), []);
 
   const [selectedNodeForModal, setSelectedNodeForModal] = useState<SelectedGraphNode | null>(null);
@@ -244,15 +244,15 @@ const GraphView: React.FC<GraphViewProps> = ({ notes, plotPoints, worldElements,
     notes.forEach(note => {
       const categoryDetails = NOTE_CATEGORIES.find(cat => cat.key === note.category) || NOTE_CATEGORIES.find(cat => cat.key === '');
       visNodes.push({
-        id: `${NODE_ID_PREFIX.NOTE}${note.id}`, 
+        id: `${NODE_ID_PREFIX.NOTE}${note.id}`,
         originalId: note.id,
         itemType: 'note',
         label: note.title.substring(0, 20) + (note.title.length > 20 ? '...' : ''),
         group: `note-${note.category || 'other'}`,
         title: `<b>${note.title}</b><br><i>Note: ${categoryDetails?.label || 'N/A'}</i>`,
         shape: categoryDetails?.graphStyle?.shape,
-        color: categoryDetails?.graphStyle?.color ? 
-               { background: categoryDetails.graphStyle.color, border: categoryDetails.graphStyle.borderColor || categoryDetails.graphStyle.color } : 
+        color: categoryDetails?.graphStyle?.color ?
+               { background: categoryDetails.graphStyle.color, border: categoryDetails.graphStyle.borderColor || categoryDetails.graphStyle.color } :
                undefined,
       });
     });
@@ -310,7 +310,7 @@ const GraphView: React.FC<GraphViewProps> = ({ notes, plotPoints, worldElements,
           const foundWE = worldElements.find(w => w.id === visNode.originalId);
           if (foundWE) fullNodeData = { ...foundWE, itemType: 'worldElement' };
         }
-        
+
         if (fullNodeData) {
           setSelectedNodeForModal(fullNodeData);
           setIsNodeDetailModalOpen(true);
@@ -326,12 +326,12 @@ const GraphView: React.FC<GraphViewProps> = ({ notes, plotPoints, worldElements,
     if (sourceNode && targetNode && sourceNode.itemType === 'note') {
       setLinkCreationData({ source: sourceNode, target: targetNode });
       setIsCreateLinkModalOpen(true);
-      callback(null); 
+      callback(null);
     } else {
       if (sourceNode && sourceNode.itemType !== 'note') {
         alert("การสร้าง Link รองรับเฉพาะการลากจาก Note เท่านั้นในขณะนี้");
       }
-      callback(null); 
+      callback(null);
     }
   }, [allVisNodes]);
 
@@ -354,7 +354,7 @@ const GraphView: React.FC<GraphViewProps> = ({ notes, plotPoints, worldElements,
           let targetVisNodeId = `${NODE_ID_PREFIX.NOTE}${link.targetId}`; // Default to note
           if (plotPoints.some(p => p.id === link.targetId)) targetVisNodeId = `${NODE_ID_PREFIX.PLOT_POINT}${link.targetId}`;
           else if (worldElements.some(w => w.id === link.targetId)) targetVisNodeId = `${NODE_ID_PREFIX.WORLD_ELEMENT}${link.targetId}`;
-          
+
           if (allVisNodes.some(n => n.id === targetVisNodeId) && allVisNodes.some(n => n.id === `${NODE_ID_PREFIX.NOTE}${note.id}`)) {
             visEdges.push({
               from: `${NODE_ID_PREFIX.NOTE}${note.id}`,
@@ -373,7 +373,7 @@ const GraphView: React.FC<GraphViewProps> = ({ notes, plotPoints, worldElements,
     const edgesDataSet = new window.vis.DataSet(visEdges);
 
     const data = { nodes: nodesDataSet, edges: edgesDataSet };
-    const options = { 
+    const options = {
       autoResize: true, height: '100%', width: '100%', locale: 'th',
       nodes: {
         shape: 'ellipse',
@@ -384,19 +384,19 @@ const GraphView: React.FC<GraphViewProps> = ({ notes, plotPoints, worldElements,
       edges: {
         smooth: { enabled: true, type: 'dynamic', roundness: 0.5 },
         arrows: { to: { enabled: true, scaleFactor: 0.7 } },
-        color: { 
+        color: {
           color: isDarkMode ? 'rgba(174, 174, 178, 0.3)' : 'rgba(142, 142, 147, 0.4)',
-          highlight: 'var(--c-primary)', 
-          hover: 'var(--c-primary-hover)', 
-          opacity: 1.0, 
+          highlight: 'var(--c-primary)',
+          hover: 'var(--c-primary-hover)',
+          opacity: 1.0,
         },
         font: { color: isDarkMode ? '#AEAEB2' : '#8E8E93', size: 10, strokeWidth: 0, align: 'middle', },
         width: 1.5, hoverWidth: 2,
       },
       physics: {
-        enabled: layout === 'force', 
+        enabled: layout === 'force',
         solver: 'barnesHut',
-        barnesHut: { 
+        barnesHut: {
           gravitationalConstant: -15000,
           centralGravity: 0.1,
           springLength: 250,
@@ -418,8 +418,8 @@ const GraphView: React.FC<GraphViewProps> = ({ notes, plotPoints, worldElements,
       },
       interaction: { hover: true, tooltipDelay: 200, navigationButtons: true, keyboard: true, },
       manipulation: {
-        enabled: true, 
-        initiallyActive: true, 
+        enabled: true,
+        initiallyActive: true,
         addEdge: (edgeData: {from: string, to: string}, callback: (edge: VisEdge | null) => void) => {
             handleAddEdge(edgeData, callback);
         },
@@ -468,7 +468,7 @@ const GraphView: React.FC<GraphViewProps> = ({ notes, plotPoints, worldElements,
                         <Icon name="stream" className="w-4 h-4 mr-1" /> Timeline
                     </button>
                 </div>
-                <button 
+                <button
                     onClick={() => networkInstanceRef.current?.fit()}
                     className="p-2 w-10 h-10 flex items-center justify-center rounded-md hover:bg-surface text-text-secondary"
                     title="Fit graph to view"
@@ -490,7 +490,7 @@ const GraphView: React.FC<GraphViewProps> = ({ notes, plotPoints, worldElements,
         onClose={() => setIsNodeDetailModalOpen(false)}
         nodeData={selectedNodeForModal}
         allItems={allItems}
-        onEditNote={onOpenNoteEditor as (note:Note) => void} 
+        onEditNote={onOpenNoteEditor as (note:Note) => void}
         onNavigate={onNavigate}
       />
       <CreateLinkModal

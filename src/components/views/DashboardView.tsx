@@ -85,7 +85,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({
           <p className="text-text-secondary">ยินดีต้อนรับกลับมา, {USER_NAME}</p>
         </div>
       </div>
-      
+
       {/* Main Dashboard Grid */}
        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left Column: Stat Ring Chart and Daily Quests */}
@@ -118,17 +118,17 @@ const DashboardView: React.FC<DashboardViewProps> = ({
 
             {/* Right Column: Quick Actions and Recent Notes */}
             <div className="lg:col-span-2 space-y-6">
-                <div className="grid grid-cols-2 gap-4"> 
+                <div className="grid grid-cols-2 gap-4">
                     {DASHBOARD_QUICK_ACTIONS.map(item => (
-                    <button 
+                    <button
                         key={item.action}
                         onClick={() => onQuickAction(item.action)}
                         className="bg-surface p-4 flex flex-col items-center justify-center text-center rounded-xl shadow-sm border border-border hover:shadow-md hover:-translate-y-0.5 transition-all"
                     >
-                        <div className={`rounded-full w-12 h-12 ${item.iconBg} flex items-center justify-center mb-2`}> 
+                        <div className={`rounded-full w-12 h-12 ${item.iconBg} flex items-center justify-center mb-2`}>
                           <Icon name={item.icon} className={`${item.iconColor} w-6 h-6`} />
                         </div>
-                        <h3 className="font-medium font-heading text-sm">{item.title}</h3> 
+                        <h3 className="font-medium font-heading text-sm">{item.title}</h3>
                         <p className="text-xs text-text-secondary mt-0.5">{item.description}</p>
                     </button>
                     ))}

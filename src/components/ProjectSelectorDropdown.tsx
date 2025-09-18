@@ -11,14 +11,14 @@ interface ProjectSelectorDropdownProps {
   onSelectProject: (project: Project) => void;
 }
 
-const ProjectSelectorDropdown: React.FC<ProjectSelectorDropdownProps> = ({ 
-  projects, 
-  selectedProject, 
-  onSelectProject 
+const ProjectSelectorDropdown: React.FC<ProjectSelectorDropdownProps> = ({
+  projects,
+  selectedProject,
+  onSelectProject
 }) => {
   return (
     <div className="relative">
-      <select 
+      <select
         title="Select Project"
         className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
         value={selectedProject?.id || ''}

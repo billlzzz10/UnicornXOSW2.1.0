@@ -28,9 +28,11 @@ import {
   SETTINGS_NAVIGATION,
 } from './constants';
 import { CORE_WRITING_PERSONALITIES, AI_FUNCTIONAL_TOOLS } from './prompts';
+import CommandPalette, { Command } from './src/components/CommandPalette';
 
 
 const App: React.FC = () => {
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [currentView, setCurrentView] = useState<ViewName>(() => {
     const savedView = localStorage.getItem('ashval_currentView');
     return (savedView ? JSON.parse(savedView) : DEFAULT_VIEW) as ViewName;
@@ -88,6 +90,24 @@ const App: React.FC = () => {
   const [isNoteEditorModalOpen, setIsNoteEditorModalOpen] = useState(false);
   const [noteDataForModal, setNoteDataForModal] = useState<Partial<Note> | null>(null);
 
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsCommandPaletteOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const commands: Command[] = [
+    { id: 'new-note', name: 'New Note', action: () => handleOpenNoteEditor(), icon: 'file-plus' },
+    { id: 'toggle-theme', name: 'Toggle Theme', action: handleThemeToggle, icon: 'palette' },
+    ...MAIN_NAVIGATION.map(item => ({ id: `go-to-${item.id}`, name: `Go to ${item.label}`, action: () => handleNavigate(item.id as ViewName), icon: item.icon })),
+    ...TOOLS_NAVIGATION.map(item => ({ id: `go-to-${item.id}`, name: `Go to ${item.label}`, action: () => handleNavigate(item.id as ViewName), icon: item.icon })),
+  ];
 
   useEffect(() => {
     if(isDarkMode) {
@@ -623,6 +643,12 @@ const App: React.FC = () => {
       )}
 
       <MobileControls onQuickAction={handleQuickAction} />
+
+      <CommandPalette
+        isOpen={isCommandPaletteOpen}
+        onClose={() => setIsCommandPaletteOpen(false)}
+        commands={commands}
+      />
 
       <div className="pt-16 flex-grow flex flex-col">
         <main className="max-w-full md:max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4 sm:py-6 w-full flex-grow flex flex-col overflow-hidden">

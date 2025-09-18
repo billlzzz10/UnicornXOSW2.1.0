@@ -1,6 +1,6 @@
 // Types for the Ashval Writer's Suite application
 
-export type ViewName = 
+export type ViewName =
   | 'dashboard'
   | 'graph'
   | 'notes'

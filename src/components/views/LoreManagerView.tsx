@@ -32,10 +32,10 @@ const PlotOutlineTab: React.FC<Omit<LoreManagerViewProps, 'worldElements' | 'add
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingPlotPoint, setEditingPlotPoint] = useState<PlotPoint | null>(null);
     const [formState, setFormState] = useState({ title: '', description: '', type: PLOT_POINT_TYPES[0]?.key || 'other', status: DEFAULT_PLOT_POINT_STATUS });
-  
+
     const getTypeDetails = (typeKey: PlotPointType | string) => PLOT_POINT_TYPES.find(pt => pt.key === typeKey) || PLOT_POINT_TYPES.find(pt => pt.key === 'other');
     const getStatusDetails = (statusKey: PlotPointStatus) => PLOT_POINT_STATUS_OPTIONS.find(so => so.key === statusKey) || PLOT_POINT_STATUS_OPTIONS.find(so => so.key === DEFAULT_PLOT_POINT_STATUS)!;
-  
+
     const openFormForNew = () => {
         setEditingPlotPoint(null);
         setFormState({ title: '', description: '', type: PLOT_POINT_TYPES[0]?.key || 'other', status: DEFAULT_PLOT_POINT_STATUS });
@@ -152,12 +152,12 @@ const LoreManagerView: React.FC<LoreManagerViewProps> = (props) => {
 
   const projectPlotPoints = useMemo(() => plotPoints.filter(p => p.projectId === currentProjectId).sort((a,b) => a.order - b.order), [plotPoints, currentProjectId]);
   const projectWorldElements = useMemo(() => worldElements.filter(w => w.projectId === currentProjectId).sort((a,b) => a.name.localeCompare(b.name)), [worldElements, currentProjectId]);
-  
-  const getTabClass = (tabName: ActiveTab) => 
+
+  const getTabClass = (tabName: ActiveTab) =>
     `px-4 py-2 font-medium text-sm rounded-md transition-colors flex items-center gap-2 ${
       activeTab === tabName ? 'bg-primary text-white' : 'text-text-secondary hover:bg-surface'
     }`;
-    
+
   return (
     <div className="space-y-6 text-text-primary h-full flex flex-col">
       <header>
@@ -178,7 +178,7 @@ const LoreManagerView: React.FC<LoreManagerViewProps> = (props) => {
       {/* Content Area */}
       <div className="flex-grow overflow-y-auto pb-4">
         {activeTab === 'plot' && (
-          <PlotOutlineTab 
+          <PlotOutlineTab
             {...props}
             plotPoints={projectPlotPoints}
           />

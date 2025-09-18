@@ -32,7 +32,7 @@ const PomodoroView: React.FC = () => {
     }
     return 0;
   });
-  
+
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [tempSettings, setTempSettings] = useState<PomodoroSettings>(settings);
 
@@ -85,7 +85,7 @@ const PomodoroView: React.FC = () => {
       const newTotalPomodoros = totalPomodorosToday + 1;
       setTotalPomodorosToday(newTotalPomodoros);
       localStorage.setItem(POMODORO_SESSIONS_STORAGE_KEY, JSON.stringify({ date: new Date().toDateString(), count: newTotalPomodoros }));
-      
+
       const newCompletedInCycle = pomodorosCompletedThisCycle + 1;
       if (newCompletedInCycle >= settings.pomodorosPerCycle) {
         resetTimer('longBreak', 0); // Reset cycle count
@@ -149,7 +149,7 @@ const PomodoroView: React.FC = () => {
       document.title = APP_TITLE;
     };
   }, [isRunning, timeRemaining, currentSessionType]);
-  
+
   const handleSaveSettings = () => {
     setSettings(tempSettings);
     localStorage.setItem(POMODORO_SETTINGS_STORAGE_KEY, JSON.stringify(tempSettings));
@@ -158,14 +158,14 @@ const PomodoroView: React.FC = () => {
         resetTimer(currentSessionType, pomodorosCompletedThisCycle);
     }
   };
-  
+
   const progressPercentage = () => {
     let totalDuration;
     switch (currentSessionType) {
       case 'work': totalDuration = settings.workMinutes * 60; break;
       case 'shortBreak': totalDuration = settings.shortBreakMinutes * 60; break;
       case 'longBreak': totalDuration = settings.longBreakMinutes * 60; break;
-      default: totalDuration = 1; 
+      default: totalDuration = 1;
     }
     if (totalDuration === 0) return 0; // Avoid division by zero
     return ((totalDuration - timeRemaining) / totalDuration) * 100;
@@ -195,11 +195,11 @@ const PomodoroView: React.FC = () => {
       <div className={`card p-6 md:p-10 w-full max-w-md text-center transition-colors duration-500 ${getTimerCardBackground()}`}>
         <div className="flex justify-between items-center mb-6">
             <h1 className="text-xl font-semibold text-text-secondary">{sessionTypeLabel[currentSessionType]}</h1>
-            <button 
-                onClick={() => { 
+            <button
+                onClick={() => {
                     setTempSettings(settings); // Ensure temp settings are current before opening
                     setIsSettingsOpen(true);
-                }} 
+                }}
                 className={btnIcon}
                 title="ตั้งค่า"
                 aria-label="เปิดการตั้งค่า Pomodoro"
@@ -235,7 +235,7 @@ const PomodoroView: React.FC = () => {
                 />
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
-                <span 
+                <span
                     className="text-4xl md:text-5xl font-bold tabular-nums"
                     aria-live="polite"
                     aria-atomic="true"
@@ -270,7 +270,7 @@ const PomodoroView: React.FC = () => {
                 </button>
             </div>
         </div>
-        
+
         <div className="space-y-1 text-sm text-text-secondary">
             <div className="flex items-center justify-center">
                 <Icon name="tasks" className="w-4 h-4 mr-2 text-text-disabled" />
@@ -290,9 +290,9 @@ const PomodoroView: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4 text-text-primary">ตั้งค่า Pomodoro</h3>
             <div className="space-y-3 text-sm">
                 {[
-                    {label: 'Work Minutes:', key: 'workMinutes', min:1, max:90}, 
+                    {label: 'Work Minutes:', key: 'workMinutes', min:1, max:90},
                     {label: 'Short Break Minutes:', key: 'shortBreakMinutes', min:1, max:30},
-                    {label: 'Long Break Minutes:', key: 'longBreakMinutes', min:1, max:60}, 
+                    {label: 'Long Break Minutes:', key: 'longBreakMinutes', min:1, max:60},
                     {label: 'Pomodoros per Cycle:', key: 'pomodorosPerCycle', min:1, max:10}
                 ].map(item => (
                     <div key={item.key} className="flex justify-between items-center">

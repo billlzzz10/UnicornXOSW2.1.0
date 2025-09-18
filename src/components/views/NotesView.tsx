@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { Note, ViewName, NoteCategory, Project, NoteDisplayFormat } from '../../../types';
-import { NOTE_CATEGORIES, INITIAL_NOTES, NOTE_DISPLAY_OPTIONS } from '../../../constants'; 
-import * as jsyaml from 'js-yaml'; 
+import { NOTE_CATEGORIES, INITIAL_NOTES, NOTE_DISPLAY_OPTIONS } from '../../../constants';
+import * as jsyaml from 'js-yaml';
 import { getSafeHtml } from '../../../utils';
 import Icon from '../Icon';
 
@@ -30,21 +30,21 @@ const NotesView: React.FC<NotesViewProps> = ({
   const [categoryFilter, setCategoryFilter] = useState<NoteCategory | 'all'>('all');
   const [sortFilter, setSortFilter] = useState<SortOption>('newest');
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   const projectNotes = useMemo(() => {
     return notes.filter(note => note.projectId === currentProjectId);
   }, [notes, currentProjectId]);
 
   const categoryCounts = useMemo(() => {
-    const counts: { [key in NoteCategory | 'all']: number } = { 
-        '':0, character: 0, event: 0, other: 0, place: 0, plot: 0, world: 0, all: projectNotes.length 
+    const counts: { [key in NoteCategory | 'all']: number } = {
+        '':0, character: 0, event: 0, other: 0, place: 0, plot: 0, world: 0, all: projectNotes.length
     };
     projectNotes.forEach(note => {
       counts[note.category || ''] = (counts[note.category || ''] || 0) + 1;
     });
     return counts;
   }, [projectNotes]);
-  
+
   const filteredAndSortedNotes = useMemo(() => {
     let processedNotes = [...projectNotes];
 
@@ -87,11 +87,11 @@ const NotesView: React.FC<NotesViewProps> = ({
   }, [projectNotes, activeCategoryPill, categoryFilter, searchTerm, sortFilter]);
 
   const handleAddNewNote = () => {
-    onOpenNoteEditor({ category: '', projectId: currentProjectId }); 
+    onOpenNoteEditor({ category: '', projectId: currentProjectId });
   };
 
   const handleEditNote = (note: Note) => {
-    onOpenNoteEditor(note); 
+    onOpenNoteEditor(note);
   };
 
   const handleDeleteNote = (noteId: string) => {
@@ -99,13 +99,13 @@ const NotesView: React.FC<NotesViewProps> = ({
       deleteNote(noteId);
     }
   };
-  
+
   const getCategoryDetails = useCallback((categoryKey: NoteCategory | undefined) => {
     return NOTE_CATEGORIES.find(cat => cat.key === (categoryKey || '')) || NOTE_CATEGORIES.find(cat => cat.key === '');
   }, []);
 
   const handleExportNote = (note: Note) => {
-    const { yamlFrontmatter, characterCount, ...restOfNote } = note; 
+    const { yamlFrontmatter, characterCount, ...restOfNote } = note;
     const frontmatterData = {
       id: restOfNote.id,
       title: restOfNote.title,
@@ -121,7 +121,7 @@ const NotesView: React.FC<NotesViewProps> = ({
     try {
       const yamlString = jsyaml.dump(frontmatterData);
       const markdownContent = `---\n${yamlString}---\n\n${note.content}`;
-      
+
       const blob = new Blob([markdownContent], { type: 'text/markdown;charset=utf-8' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
@@ -152,10 +152,10 @@ const NotesView: React.FC<NotesViewProps> = ({
           let frontmatter: Partial<Note> = {};
           let markdownBody = content;
 
-          if (parts.length >= 3 && parts[0].trim() === '') { 
+          if (parts.length >= 3 && parts[0].trim() === '') {
             const yamlContent = parts[1].trim();
-            markdownBody = parts.slice(2).join('---').trimStart(); 
-            
+            markdownBody = parts.slice(2).join('---').trimStart();
+
             const parsedYaml = jsyaml.load(yamlContent) as any;
             if (parsedYaml && typeof parsedYaml === 'object') {
               frontmatter = {
@@ -167,11 +167,11 @@ const NotesView: React.FC<NotesViewProps> = ({
                 icon: parsedYaml.icon || '',
                 createdAt: parsedYaml.createdAt && !isNaN(new Date(parsedYaml.createdAt).getTime()) ? new Date(parsedYaml.createdAt).toISOString() : new Date().toISOString(),
                 updatedAt: parsedYaml.updatedAt && !isNaN(new Date(parsedYaml.updatedAt).getTime()) ? new Date(parsedYaml.updatedAt).toISOString() : new Date().toISOString(),
-                projectId: currentProjectId, 
+                projectId: currentProjectId,
                 yamlFrontmatter: yamlContent,
               };
             }
-          } else { 
+          } else {
              frontmatter = {
                 id: `imported-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
                 title: file.name.replace('.md', ''),
@@ -182,11 +182,11 @@ const NotesView: React.FC<NotesViewProps> = ({
                 projectId: currentProjectId,
             };
           }
-          
+
           importedNotes.push({
             ...frontmatter,
             content: markdownBody,
-            characterCount: markdownBody.length, 
+            characterCount: markdownBody.length,
           } as Note);
 
         } catch (error) {
@@ -203,13 +203,13 @@ const NotesView: React.FC<NotesViewProps> = ({
       };
       reader.readAsText(file);
     });
-    if (fileInputRef.current) fileInputRef.current.value = ''; 
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
 
   const NoteCard: React.FC<{ note: Note; displayFormat: NoteDisplayFormat }> = ({ note, displayFormat }) => {
     const catDetails = getCategoryDetails(note.category);
-    
+
     let cardClasses = "note-card group relative flex flex-col h-full bg-paper-bg text-paper-text rounded-xl shadow-card border border-border/50 hover:border-primary/30 hover:-translate-y-px transition-all duration-300 ease-in-out cursor-pointer hover:scale-103 ";
     let iconSize = "text-xl";
     let titleSize = "text-base font-heading";
@@ -238,9 +238,9 @@ const NotesView: React.FC<NotesViewProps> = ({
     }
 
     return (
-        <div 
+        <div
             className={cardClasses}
-            data-category={note.category} 
+            data-category={note.category}
             data-id={note.id}
             onClick={() => handleEditNote(note)}
         >
@@ -275,7 +275,7 @@ const NotesView: React.FC<NotesViewProps> = ({
             <div className={metadataContainerClasses}> {/* Bottom part of the card */}
                 {note.tags.length > 0 && (
                     <div className="mb-2 flex flex-wrap gap-1">
-                        {note.tags.slice(0, maxTags).map(tag => ( 
+                        {note.tags.slice(0, maxTags).map(tag => (
                             <span key={tag} className="inline-block bg-black/5 text-current opacity-80 px-2 py-0.5 rounded text-xs">#{tag}</span>
                         ))}
                         {note.tags.length > maxTags && <span className="text-xs opacity-60">...</span>}
@@ -334,7 +334,7 @@ const NotesView: React.FC<NotesViewProps> = ({
         default: return 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6';
     }
   }
-  
+
   const btnSecondary = `px-4 py-2 bg-surface text-text-primary rounded-md hover:bg-border active:scale-95 transition-all duration-200 border border-border flex items-center text-sm font-medium`;
   const btnPrimary = `px-4 py-2 rounded-md transition-all duration-200 flex items-center text-sm font-medium btn-textured-primary`;
 
@@ -357,9 +357,9 @@ const NotesView: React.FC<NotesViewProps> = ({
               </button>
               <div className="flex items-center bg-surface rounded-md p-0.5 border border-border">
                 {NOTE_DISPLAY_OPTIONS.map(opt => (
-                    <button 
+                    <button
                         key={opt.key}
-                        onClick={() => setDisplayFormat(opt.key)} 
+                        onClick={() => setDisplayFormat(opt.key)}
                         title={opt.label}
                         className={`p-2 w-9 h-9 flex items-center justify-center rounded-md text-sm transition-colors
                           ${displayFormat === opt.key ? 'bg-primary text-white' : 'text-text-secondary hover:bg-bg-subtle'}`}
@@ -402,14 +402,14 @@ const NotesView: React.FC<NotesViewProps> = ({
           </div>
           {/* Category Pills */}
           <div className="flex flex-wrap gap-2 mt-4">
-              <button 
+              <button
                   className={`category-pill px-3 py-1 rounded-full text-sm transition-colors ${activeCategoryPill === 'all' ? 'bg-primary text-white' : 'bg-bg-subtle text-text-secondary hover:bg-border active:scale-95'}`}
                   onClick={() => setActiveCategoryPill('all')}
               >
                   ทั้งหมด ({categoryCounts.all})
               </button>
               {NOTE_CATEGORIES.filter(cat => cat.key !== '' && categoryCounts[cat.key] > 0).map(cat => (
-                  <button 
+                  <button
                       key={cat.key}
                       className={`category-pill px-3 py-1 rounded-full text-sm transition-colors ${activeCategoryPill === cat.key ? 'bg-primary text-white' : (cat.colorClasses.pillBg || '')} active:scale-95 flex items-center gap-1.5`}
                       onClick={() => setActiveCategoryPill(cat.key)}
@@ -419,12 +419,12 @@ const NotesView: React.FC<NotesViewProps> = ({
               ))}
           </div>
       </div>
-      
+
       {/* Notes Display Area */}
       <div className="flex-grow overflow-y-auto pb-4">
         {filteredAndSortedNotes.length > 0 ? (
           <div id="notes-display-area" className={getLayoutClass()}>
-             {displayFormat === 'list' 
+             {displayFormat === 'list'
                 ? filteredAndSortedNotes.map(note => <NoteListItem key={note.id} note={note} />)
                 : filteredAndSortedNotes.map(note => <NoteCard key={note.id} note={note} displayFormat={displayFormat} />)
              }

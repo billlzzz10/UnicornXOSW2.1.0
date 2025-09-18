@@ -45,7 +45,7 @@ const StoryStructureGeneratorView: React.FC<StoryStructureGeneratorViewProps> = 
         });
       }
     }
-    
+
     try {
         addMultiplePlotPoints(newPlotPoints);
         setSuccessMessage(`สร้างโครงสร้าง ${newPlotPoints.length} จุดสำเร็จ!`);
@@ -118,7 +118,7 @@ const StoryStructureGeneratorView: React.FC<StoryStructureGeneratorViewProps> = 
           <div className={`mt-6 p-4 rounded-md text-sm ${successMessage.includes('ผิดพลาด') ? 'bg-error-bg dark:bg-error-dark-bg text-error-dark dark:text-error' : 'bg-success-bg dark:bg-success-dark-bg text-success-dark dark:text-success'}`}>
             <p>{successMessage}</p>
             {!successMessage.includes('ผิดพลาด') && (
-                 <button 
+                 <button
                     onClick={() => onNavigate(ViewName.LoreManager)}
                     className="mt-2 font-semibold hover:underline active:scale-95 active:brightness-95"
                 >
@@ -128,7 +128,7 @@ const StoryStructureGeneratorView: React.FC<StoryStructureGeneratorViewProps> = 
           </div>
         )}
       </div>
-      
+
       <div className="bg-info-bg dark:bg-info-dark-bg border border-info dark:border-info-dark rounded-lg p-4 text-sm text-info-dark dark:text-info max-w-lg mx-auto">
         <div className="flex items-start">
           <Icon name="info-circle" className="w-5 h-5 mt-1 mr-3" />

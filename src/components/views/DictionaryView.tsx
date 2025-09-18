@@ -29,7 +29,7 @@ const DictionaryView: React.FC<DictionaryViewProps> = ({
   const [formTerm, setFormTerm] = useState('');
   const [formDefinition, setFormDefinition] = useState('');
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
-  
+
   const [isAiSuggesting, setIsAiSuggesting] = useState(false);
   const ai = useRef(new GoogleGenAI({ apiKey: process.env.API_KEY! })).current;
 
@@ -108,7 +108,7 @@ Output only the resulting Thai definition. Do not include conversational filler 
     if (!trimmedTerm) return; // Term is required, definition is not
 
     const trimmedDef = formDefinition.trim();
-    
+
     if (isEditingId) {
       const entry = dictionaryEntries.find((e) => e.id === isEditingId);
       if (!entry) return;
@@ -160,7 +160,7 @@ Output only the resulting Thai definition. Do not include conversational filler 
             />
         </div>
       </div>
-      
+
       {/* Add/Edit Form */}
       {(isAdding || isEditingId) && (
         <form
@@ -270,7 +270,7 @@ Output only the resulting Thai definition. Do not include conversational filler 
                     </div>
                   )}
                   <div className="text-xs text-text-disabled mt-2">
-                    สร้าง: {new Date(entry.createdAt).toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' })} | 
+                    สร้าง: {new Date(entry.createdAt).toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' })} |
                     แก้ไข: {new Date(entry.updatedAt).toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' })}
                   </div>
                 </div>

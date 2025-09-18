@@ -3,7 +3,7 @@
 import React from 'react';
 import { AiPersonality } from '../../../types';
 import { APP_ROADMAP_MARKDOWN } from '../../../constants';
-import PlaceholderView from './PlaceholderView'; 
+import PlaceholderView from './PlaceholderView';
 import { getSafeHtml } from '../../../utils';
 import Icon from '../Icon';
 
@@ -41,7 +41,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({
       <div className="bg-surface rounded-xl shadow-card p-6">
         <h2 className="text-xl font-semibold font-heading mb-1">AI Writer Settings</h2>
         <p className="text-sm text-text-secondary mb-4">เลือกบุคลิกภาพเริ่มต้นสำหรับ AI Writer ของคุณ</p>
-        
+
         <div className="space-y-3">
             <label htmlFor="ai-personality-select" className="block text-sm font-medium text-text-secondary">
                 Default AI Personality:
@@ -76,10 +76,10 @@ const SettingsView: React.FC<SettingsViewProps> = ({
             </div>
         </div>
       </div>
-      
+
       {/* Other Settings Placeholder */}
-      <PlaceholderView 
-        title="Other Settings" 
+      <PlaceholderView
+        title="Other Settings"
         iconClass="fas fa-ellipsis-h"
         message="ส่วนการจัดการบัญชี, การเชื่อมต่อ, และการแจ้งเตือน จะถูกเพิ่มเข้ามาในอนาคต"
       />
@@ -89,7 +89,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({
         <h2 className="text-xl font-semibold font-heading mb-4 flex items-center">
           <Icon name="road" className="w-5 h-5 text-primary mr-3" /> Roadmap
         </h2>
-        <div 
+        <div
             className="prose prose-sm dark:prose-invert max-w-none text-text-primary markdown-content"
             dangerouslySetInnerHTML={getSafeRoadmapHtml(APP_ROADMAP_MARKDOWN)}
         >

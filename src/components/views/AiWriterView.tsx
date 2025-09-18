@@ -34,11 +34,11 @@ const AiWriterView: React.FC<AiWriterViewProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false); 
   const [currentChat, setCurrentChat] = useState<Chat | null>(null);
   const [selectedAiPersonalityId, setSelectedAiPersonalityId] = useState<string>(defaultAiPersonalityId);
-  
+
   const [isContextModalOpen, setIsContextModalOpen] = useState<boolean>(false);
   const [contextTextForNextMessage, setContextTextForNextMessage] = useState<string>('');
   const [selectedContextNotesCount, setSelectedContextNotesCount] = useState<number>(0);
-  
+
   const [isCreatingNoteFromMessageId, setIsCreatingNoteFromMessageId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'chat' | 'mentor'>('chat');
   const [isRecording, setIsRecording] = useState(false);
@@ -75,7 +75,7 @@ const AiWriterView: React.FC<AiWriterViewProps> = ({
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
-  }, [messages, activeTab]); 
+  }, [messages, activeTab]);
 
   const handleAddContext = (selectedNotes: Note[]) => {
     const combinedContext = selectedNotes.map(note => `หัวข้อ: ${note.title}\nเนื้อหา:\n${note.content}`).join('\n\n---\n\n');
@@ -121,7 +121,7 @@ Important: Respond ONLY with the JSON object. Do not include any introductory/co
   const handleCreateNoteFromMessage = useCallback(async (message: AiChatLog) => {
     if (!message.text || isCreatingNoteFromMessageId === message.id) return;
     setIsCreatingNoteFromMessageId(message.id);
-    
+
     const structuredData = await structureTextForNote(message.text);
     if (structuredData && structuredData.title && structuredData.content) {
       onOpenNoteEditor({
@@ -151,40 +151,40 @@ Important: Respond ONLY with the JSON object. Do not include any introductory/co
     if (contextTextForNextMessage) {
       userMessageForDisplay = `[เอกสารอ้างอิง (${selectedContextNotesCount} รายการ)]:\n${contextTextForNextMessage.substring(0,150)}...\n\n[คำถามของฉัน]:\n${inputText}`;
     }
-    
+
     const userMessage: AiChatLog = {
       id: `user-${Date.now()}`,
       sender: 'user',
-      text: userMessageForDisplay, 
+      text: userMessageForDisplay,
       timestamp: new Date().toISOString(),
     };
     setMessages(prev => [...prev, userMessage]);
-    
-    const currentInputText = inputText; 
+
+    const currentInputText = inputText;
     setInputText('');
     setIsLoading(true);
 
     const aiMessageId = `ai-${Date.now()}`;
-    setMessages(prev => [...prev, { 
-        id: aiMessageId, 
-        sender: 'ai', 
-        text: '', 
-        isLoading: true, 
+    setMessages(prev => [...prev, {
+        id: aiMessageId,
+        sender: 'ai',
+        text: '',
+        isLoading: true,
         timestamp: new Date().toISOString(),
-        aiModeId: currentPersonality.id 
+        aiModeId: currentPersonality.id
     }]);
 
     const geminiParts: Part[] = [];
     if (contextTextForNextMessage) {
         geminiParts.push({ text: `เอกสารอ้างอิงที่เกี่ยวข้อง (โปรดใช้ข้อมูลนี้ในการตอบคำถาม):\n${contextTextForNextMessage}` });
     }
-    
+
     geminiParts.push({ text: currentInputText });
-    
+
     try {
       const stream = await currentChat.sendMessageStream({ message: geminiParts });
       let currentAiResponseText = '';
-      for await (const chunk of stream) { 
+      for await (const chunk of stream) {
         currentAiResponseText += chunk.text;
         setMessages(prev => prev.map(msg =>
           msg.id === aiMessageId ? { ...msg, text: currentAiResponseText, isLoading: true } : msg
@@ -200,7 +200,7 @@ Important: Respond ONLY with the JSON object. Do not include any introductory/co
       ));
     } finally {
       setIsLoading(false);
-      setContextTextForNextMessage(''); 
+      setContextTextForNextMessage('');
       setSelectedContextNotesCount(0);
     }
   }, [inputText, isLoading, currentChat, currentPersonality, contextTextForNextMessage, selectedContextNotesCount]);
@@ -257,7 +257,7 @@ Important: Respond ONLY with the JSON object. Do not include any introductory/co
               </div>
             </div>
             <div className="flex items-center space-x-2 flex-shrink-0">
-              <button 
+              <button
                 className="px-3 py-2 bg-surface text-text-secondary rounded-md hover:bg-border text-sm flex items-center gap-1.5"
                 title="เพิ่มบริบทจากโน้ต"
                 onClick={() => setIsContextModalOpen(true)}
@@ -307,8 +307,8 @@ Important: Respond ONLY with the JSON object. Do not include any introductory/co
                 {messages.map(msg => (
                   <div key={msg.id} className={`flex group animate-slide-in ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                     <div className={`max-w-xs md:max-w-md lg:max-w-lg xl:max-w-2xl p-3 rounded-xl shadow relative ${
-                        msg.sender === 'user' 
-                        ? 'bg-primary text-white rounded-br-none' 
+                        msg.sender === 'user'
+                        ? 'bg-primary text-white rounded-br-none'
                         : `bg-surface text-text-primary rounded-bl-none ${msg.isError ? 'border border-error' : ''}`
                     }`}>
                       {msg.isLoading && msg.sender === 'ai' && msg.text === '' ? (
@@ -349,8 +349,8 @@ Important: Respond ONLY with the JSON object. Do not include any introductory/co
                   <div className="mb-2 text-xs text-primary">
                     <Icon name="info-circle" className="w-3 h-3 mr-1" />
                     จะใช้บริบทจาก {selectedContextNotesCount} โน้ตในข้อความถัดไป
-                    <button 
-                      onClick={() => { setContextTextForNextMessage(''); setSelectedContextNotesCount(0); }} 
+                    <button
+                      onClick={() => { setContextTextForNextMessage(''); setSelectedContextNotesCount(0); }}
                       className="ml-2 text-error hover:underline text-xs"
                       title="ล้างบริบท"
                     >
@@ -399,7 +399,7 @@ Important: Respond ONLY with the JSON object. Do not include any introductory/co
         <button
           onClick={startRecording}
           disabled={isRecording}
-          className="px-4 py-2 bg-green-500 text-white rounded"  
+          className="px-4 py-2 bg-green-500 text-white rounded"
         >
           Record GIF
         </button>
