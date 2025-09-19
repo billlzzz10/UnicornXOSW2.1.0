@@ -86,6 +86,10 @@ const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
       </div>
 
+      <div className="w-full mb-6">
+        <img src="/assets/cover.png" alt="Cover Image" className="w-full h-auto rounded-xl object-cover" />
+      </div>
+
       {/* Main Dashboard Grid */}
        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left Column: Stat Ring Chart and Daily Quests */}

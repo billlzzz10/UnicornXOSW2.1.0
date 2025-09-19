@@ -7,10 +7,10 @@ export default defineConfig({
   root: '.',
   publicDir: 'public',
   build: {
-    outDir: 'dist',
+    outDir: 'docs',
     sourcemap: true,
     rollupOptions: {
-      input: './public/index.html'
+      input: 'index.html'
     }
   },
   server: {
