@@ -7,15 +7,12 @@ export default defineConfig({
   root: '.',
   publicDir: 'public',
   build: {
-    outDir: 'docs',
+    outDir: 'dist',
     sourcemap: true,
-    rollupOptions: {
-      input: 'index.html'
-    }
   },
   server: {
-    port: 3000,
-    open: true,
+    port: 5173,
+    open: false,
     host: true
   },
   resolve: {
