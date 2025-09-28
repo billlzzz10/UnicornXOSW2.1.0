@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(rateLimiter);
 
 app.use('/api/job', authenticateJWT, jobRoutes);
-app.use('/api/prompt', authenticateJWT, promptRoutes);
+app.use('/api/prompt', rateLimiter, authenticateJWT, promptRoutes);
 
 export default app;
 
