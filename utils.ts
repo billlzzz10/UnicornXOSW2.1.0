@@ -11,16 +11,16 @@ export function generateId(): string {
 }
 
 export function getSafeHtml(html: string): { __html: string } {
-  // Basic HTML sanitization - in a real app, use a proper library like DOMPurify
-  let sanitized = html
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-    .replace(/javascript:/gi, '');
-  // Remove event handlers repeatedly until none are left
-  let prevSanitized;
+  // Basic HTML sanitization - in a real app, use a proper library like DOMPurify or sanitize-html
+  let sanitized = html;
+  let previous;
   do {
-    prevSanitized = sanitized;
-    sanitized = sanitized.replace(/on\w+="[^"]*"/gi, '');
-  } while (sanitized !== prevSanitized);
+    previous = sanitized;
+    sanitized = sanitized
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/javascript:/gi, '')
+      .replace(/on\w+="[^"]*"/gi, '');
+  } while (sanitized !== previous);
   
   return { __html: sanitized };
 }
