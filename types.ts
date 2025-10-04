@@ -31,6 +31,13 @@ export interface Note {
   createdAt: Date;
   updatedAt: Date;
   projectId?: string;
+  // Optional fields for new features
+  wordCount?: number;
+  characterCount?: number;
+  subtitle?: string;
+  tags?: string[];
+  icon?: string;
+  yamlFrontmatter?: string;
 }
 
 export interface Task {
