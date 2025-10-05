@@ -5,8 +5,17 @@ import LoginView from "./src/components/views/LoginView";
 import OAuthCallbackView from "./src/components/views/OAuthCallbackView";
 import Header from "./src/components/Header";
 
-const isAuthenticated = () => {
-    return localStorage.getItem("isAuthenticated") === "true";
+const isAuthenticated = (): boolean => {
+    try {
+        if (typeof window === "undefined") return false;
+        // Prefer an auth token when available; fall back to legacy boolean flag.
+        const token = localStorage.getItem("authToken");
+        if (token && token.trim() !== "") return true;
+        return localStorage.getItem("isAuthenticated") === "true";
+    } catch (e) {
+        // localStorage can throw in some environments (e.g. private mode or SSR), treat as unauthenticated.
+        return false;
+    }
 };
 
 const ProtectedLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
