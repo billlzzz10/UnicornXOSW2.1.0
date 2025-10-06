@@ -121,7 +121,10 @@ function MermaidBlock({ code }: MermaidBlockProps) {
         if (ref.current) {
           ref.current.innerHTML = DOMPurify.sanitize(svg, {
             USE_PROFILES: { svg: true },
-            ALLOWED_TAGS: ['svg', 'g', 'path', 'circle', 'rect', 'line', 'text', 'tspan', 'polygon', 'polyline', 'ellipse']
+            ALLOWED_TAGS: ['svg', 'g', 'path', 'style', 'circle', 'rect', 'line', 'text', 'tspan', 'polygon', 'polyline', 'ellipse'],
+            ALLOWED_ATTR: ['d', 'cx', 'cy', 'r', 'x', 'y', 'width', 'height', 'fill', 'stroke', 'stroke-width', 'transform', 'viewbox', 'class', 'id', 'style', 'text-anchor', 'font-size', 'font-family', 'dy'],
+            FORBID_TAGS: ['script', 'iframe', 'object'],
+            FORBID_ATTR: ['onclick', 'onerror', 'onload', 'onmouseover']
           });
         }
       } catch (e) {
