@@ -22,7 +22,7 @@
   "license": "MIT",
   "dependencies": {
     "@google/genai": "^1.8.0",
-    "@huggingface/inference": "^4.3.2",
+    "@huggingface/inference": "^4.13.5",
     "chart.js": "^4.5.0",
     "cors": "^2.8.5",
     "dompurify": "^3.2.7",
